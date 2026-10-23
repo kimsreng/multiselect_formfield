@@ -4,31 +4,31 @@ class MultiSelectDialogItem<V> {
   const MultiSelectDialogItem(this.value, this.label);
 
   final V value;
-  final String label;
+  final String? label;
 }
 
 class MultiSelectDialog<V> extends StatefulWidget {
   MultiSelectDialog(
-      {Key key, this.items, this.initialSelectedValues, this.title, this.okButtonLabel, this.cancelButtonLabel})
+      {Key? key, this.items, this.initialSelectedValues, this.title, this.okButtonLabel, this.cancelButtonLabel})
       : super(key: key);
 
-  final List<MultiSelectDialogItem<V>> items;
-  final List<V> initialSelectedValues;
-  final String title;
-  final String okButtonLabel;
-  final String cancelButtonLabel;
+  final List<MultiSelectDialogItem<V>>? items;
+  final List<V>? initialSelectedValues;
+  final String? title;
+  final String? okButtonLabel;
+  final String? cancelButtonLabel;
 
   @override
   State<StatefulWidget> createState() => _MultiSelectDialogState<V>();
 }
 
 class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
-  final _selectedValues = List<V>();
+  final List<V> _selectedValues = <V>[];
 
   void initState() {
     super.initState();
     if (widget.initialSelectedValues != null) {
-      _selectedValues.addAll(widget.initialSelectedValues);
+      _selectedValues.addAll(widget.initialSelectedValues!);
     }
   }
 
@@ -53,23 +53,23 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.title),
+      title: Text(widget.title!),
       contentPadding: EdgeInsets.only(top: 12.0),
       content: SingleChildScrollView(
         child: ListTileTheme(
           contentPadding: EdgeInsets.fromLTRB(14.0, 0.0, 24.0, 0.0),
           child: ListBody(
-            children: widget.items.map(_buildItem).toList(),
+            children: widget.items!.map(_buildItem).toList(),
           ),
         ),
       ),
       actions: <Widget>[
-        FlatButton(
-          child: Text(widget.cancelButtonLabel),
+        TextButton(
+          child: Text(widget.cancelButtonLabel!),
           onPressed: _onCancelTap,
         ),
-        FlatButton(
-          child: Text(widget.okButtonLabel),
+        TextButton(
+          child: Text(widget.okButtonLabel!),
           onPressed: _onSubmitTap,
         )
       ],
@@ -80,9 +80,10 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
     final checked = _selectedValues.contains(item.value);
     return CheckboxListTile(
       value: checked,
-      title: Text(item.label),
+      title: Text(item.label!),
       controlAffinity: ListTileControlAffinity.leading,
-      onChanged: (checked) => _onItemCheckedChange(item.value, checked),
+      onChanged: (checked) =>
+          _onItemCheckedChange(item.value, checked ?? false),
     );
   }
 }

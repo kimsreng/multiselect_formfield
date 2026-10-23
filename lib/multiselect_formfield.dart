@@ -8,22 +8,22 @@ class MultiSelectFormField extends FormField<dynamic> {
   final String hintText;
   final bool required;
   final String errorText;
-  final List dataSource;
-  final String textField;
-  final String valueField;
-  final Function change;
-  final Function open;
-  final Function close;
-  final Widget leading;
-  final Widget trailing;
+  final List? dataSource;
+  final String? textField;
+  final String? valueField;
+  final Function? change;
+  final Function? open;
+  final Function? close;
+  final Widget? leading;
+  final Widget? trailing;
   final String okButtonLabel;
   final String cancelButtonLabel;
-  final Color fillColor;
-  final InputBorder border;
+  final Color? fillColor;
+  final InputBorder? border;
 
   MultiSelectFormField(
-      {FormFieldSetter<dynamic> onSaved,
-      FormFieldValidator<dynamic> validator,
+      {required FormFieldSetter<dynamic> onSaved,
+      required FormFieldValidator<dynamic> validator,
       dynamic initialValue,
       bool autovalidate = false,
       this.titleText = 'Title',
@@ -46,14 +46,16 @@ class MultiSelectFormField extends FormField<dynamic> {
           onSaved: onSaved,
           validator: validator,
           initialValue: initialValue,
-          autovalidate: autovalidate,
+          autovalidateMode: autovalidate
+              ? AutovalidateMode.always
+              : AutovalidateMode.disabled,
           builder: (FormFieldState<dynamic> state) {
             List<Widget> _buildSelectedOptions(state) {
               List<Widget> selectedOptions = [];
 
               if (state.value != null && state.value.length > 0) {
                 state.value.forEach((item) {
-                  var existingItem = dataSource.singleWhere((itm) => itm[valueField] == item, orElse: () => null);
+                  var existingItem = dataSource!.singleWhere((itm) => itm[valueField] == item, orElse: () => null);
                   selectedOptions.add(Chip(
                     label: Text(existingItem[textField], overflow: TextOverflow.ellipsis),
                   ));
@@ -65,17 +67,17 @@ class MultiSelectFormField extends FormField<dynamic> {
 
             return InkWell(
               onTap: () async {
-                List initialSelected = state.value;
+                List? initialSelected = state.value;
                 if (initialSelected == null) {
-                  initialSelected = List();
+                  initialSelected = <dynamic>[];
                 }
 
-                final items = List<MultiSelectDialogItem<dynamic>>();
-                dataSource.forEach((item) {
+                final items = <MultiSelectDialogItem<dynamic>>[];
+                dataSource!.forEach((item) {
                   items.add(MultiSelectDialogItem(item[valueField], item[textField]));
                 });
 
-                List selectedValues = await showDialog<List>(
+                final List<dynamic>? selectedValues = await showDialog<List>(
                   context: state.context,
                   builder: (BuildContext context) {
                     return MultiSelectDialog(

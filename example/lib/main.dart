@@ -18,8 +18,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List _myActivities;
-  String _myActivitiesResult;
+  List? _myActivities;
+  late String _myActivitiesResult;
   final formKey = new GlobalKey<FormState>();
 
   @override
